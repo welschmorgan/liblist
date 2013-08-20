@@ -45,9 +45,6 @@ char	*tr_err( t_errcode c )
 #define safe_free(p) if (p) {free(p); p=NULL;}
 #define safe_new(type, count) ((type*) malloc( sizeof(type) * count ));
 
-typedef void (*list_iterator)(t_node *);
-typedef void (*list_data_printer)(void *data);
-
 t_node	*node_init (t_list * list, t_node * n)
 {
 	if (!n)
@@ -221,6 +218,69 @@ void list_print( t_list* l, list_data_printer printer )
 	}
 }
 
+t_node * list_push_front(t_list* l, t_node* n)
+{
+	if (!l || !n)
+	{
+		return (n);
+	}
+	logmsgp ("Pushing node front", n);
+	if (!l->tail)
+	{
+		l->tail=l->head=n;
+	}
+	else
+	{
+		l->tail->prev = n;
+		n->next = l->tail;
+		l->tail = n;
+	}
+	n->list = l;
+	return n;
+}
+t_list * list_pop_back(t_list* l){
+	if (!l)
+		return (l);
+	node_free(l->head);
+	return (l);
+}
+t_list * list_pop_front(t_list* l){
+	if (!l)
+		return (l);
+	node_free(l->head);
+	return (l);
+}
+
+t_node * list_insert_back(t_list * l, t_node * after, t_node * n ){
+	t_node *nn;
+	if (!l || !n || !after)
+	{
+		return (n);
+	}
+	logmsgp ("Inserting after", after);
+	nn = after->next;
+    after->next = n;
+	n->prev = after;
+	n->next = nn;
+	nn->prev = n;
+	n->list = l;
+	return n;
+}
+
+t_node * list_insert_front(t_list * l, t_node * before, t_node * n ){
+	t_node *nn;
+	if (!l || !n || !before)
+	{
+		return (n);
+	}
+	logmsgp ("Inserting before", before);
+	nn = before->prev;
+	n->next = before;
+	n->prev = nn;
+	before->prev = n;
+	n->list = l;
+	return n;
+}
 void data_print (void *d)
 {
 	printf("%i\n", *((int*)d));
