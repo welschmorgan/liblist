@@ -29,8 +29,8 @@ mrproper_x64:
 
 CC=gcc
 DEFINES=-D NDEBUG
-CFLAGS_X86=-Wall -Werror -Wextra -pedantic -ansi -m32 $(DEFINES)
-CFLAGS_X64=-Wall -Werror -Wextra -pedantic -ansi -m64 $(DEFINES)
+CFLAGS_X86=-g -Wall -Werror -Wextra -pedantic -ansi -m32 $(DEFINES)
+CFLAGS_X64=-g -Wall -Werror -Wextra -pedantic -ansi -m64 $(DEFINES)
 
 $(OBJ_DIR_X86)/list.o:
 	$(CC) $(CFLAGS_X86) -c -I$(INC_DIR) $(SRC_DIR)/list.c -o $(OBJ_DIR_X86)/list.o

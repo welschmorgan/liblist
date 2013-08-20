@@ -84,6 +84,7 @@ void	node_free( t_node * n )
 		n->list->tail = n->list->tail->next;
 	if (n->list && n->list->head == n)
 		n->list->head = n->list->head->prev;
+	n->list->size--;
 	safe_free (n);
 }
 
@@ -156,6 +157,7 @@ t_node * list_push_back(t_list* l, t_node* n)
 		l->head = n;
 	}
 	n->list = l;
+	l->size++;
 	return n;
 }
 
@@ -236,18 +238,21 @@ t_node * list_push_front(t_list* l, t_node* n)
 		l->tail = n;
 	}
 	n->list = l;
+	l->size++;
 	return n;
 }
 t_list * list_pop_back(t_list* l){
 	if (!l)
 		return (l);
 	node_free(l->head);
+	l->size--;
 	return (l);
 }
 t_list * list_pop_front(t_list* l){
 	if (!l)
 		return (l);
 	node_free(l->head);
+	l->size--;
 	return (l);
 }
 
@@ -262,8 +267,10 @@ t_node * list_insert_back(t_list * l, t_node * after, t_node * n ){
     after->next = n;
 	n->prev = after;
 	n->next = nn;
-	nn->prev = n;
+	if (nn)
+		nn->prev = n;
 	n->list = l;
+	l->size ++;
 	return n;
 }
 
@@ -279,6 +286,7 @@ t_node * list_insert_front(t_list * l, t_node * before, t_node * n ){
 	n->prev = nn;
 	before->prev = n;
 	n->list = l;
+	l->size ++;
 	return n;
 }
 void data_print (void *d)
@@ -296,21 +304,9 @@ int main (int argc, char *argv [])
 	list_push_back (l, node_alloc (l));
 	list_push_back (l, node_alloc (l));
 	list_push_back (l, node_alloc (l));
-	list_push_back (l, node_alloc (l));
-	list_push_back (l, node_alloc (l));
-	list_push_back (l, node_alloc (l));
-	list_push_back (l, node_alloc (l));
-	list_push_back (l, node_alloc (l));
-	list_push_back (l, node_alloc (l));
-	list_push_back (l, node_alloc (l));
-	list_push_back (l, node_alloc (l));
-	list_push_back (l, node_alloc (l));
-	list_push_back (l, node_alloc (l));
-	list_push_back (l, node_alloc (l));
-	list_push_back (l, node_alloc (l));
-	list_push_back (l, node_alloc (l));
-	list_push_back (l, node_alloc (l));
-	list_push_back (l, node_alloc (l));
+	list_print (l, data_print);
+	list_clear(l);
+	list_print (l, data_print);
 	*((int*)list_push_back (l, node_alloc (l))->data)=90;
 	list_print (l, data_print);
 	list_free (l);
