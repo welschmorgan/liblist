@@ -28,6 +28,7 @@ mrproper_x64:
 .PHONY: mrproper_x86 mrproper_x64 clean_x86 clean_x64
 
 CC=gcc
+AR=ar rcs
 DEFINES=-D NDEBUG
 CFLAGS_X86=-g -Wall -Werror -Wextra -pedantic -ansi -m32 $(DEFINES)
 CFLAGS_X64=-g -Wall -Werror -Wextra -pedantic -ansi -m64 $(DEFINES)
@@ -37,11 +38,13 @@ $(OBJ_DIR_X86)/list.o:
 $(OBJ_DIR_X64)/list.o:
 	$(CC) $(CFLAGS_X64) -c -I$(INC_DIR) $(SRC_DIR)/list.c -o $(OBJ_DIR_X64)/list.o
 
+
 $(TARGET_PATH_X86): $(OBJ_DIR_X86)/list.o
-	$(CC) $(CFLAGS_X86) -I$(INC_DIR) $(OBJ_DIR_X86)/list.o -o $(TARGET_PATH_X86)
+	$(AR) $(TARGET_PATH_X86) $(OBJ_DIR_X86)/list.o
 
 $(TARGET_PATH_X64): $(OBJ_DIR_X64)/list.o
-	$(CC) $(CFLAGS_X64) -I$(INC_DIR) $(OBJ_DIR_X64)/list.o -o $(TARGET_PATH_X64)
+	$(AR) $(TARGET_PATH_X64) $(OBJ_DIR_X64)/list.o
 
 all_x86: clean_x86 mrproper_x86 $(TARGET_PATH_X86)
 all_x64: clean_x64 mrproper_x64 $(TARGET_PATH_X64)
+
